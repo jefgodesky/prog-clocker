@@ -19,5 +19,8 @@
   "homepage": "https://github.com/jefgodesky/prog-clocker#readme",
   "dependencies": {
     "discord.js": "^13.1.0"
+  },
+  "devDependencies": {
+    "standard": "^16.0.3"
   }
 }
