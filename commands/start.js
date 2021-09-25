@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
+import { hasTag, getClockEmbed } from '../utils.js'
 
 const data = new SlashCommandBuilder()
   .setName('start-clock')
@@ -20,8 +21,16 @@ const data = new SlashCommandBuilder()
     .setRequired(false))
 
 const execute = async function (state, interaction) {
-  console.log(state)
-  console.log(interaction)
+  const { options } = interaction
+  const guild = interaction.guildId
+  const name = options.getString('name')
+  const length = options.getInteger('length')
+  const desc = options.getString('desc')
+  const tags = options.getString('tags')?.split(/[,;]/).map(tag => tag.trim())
+  const clock = { guild, name, max: length, curr: 0, desc, tags }
+  if (hasTag(tags, 'Private')) clock.private = interaction.user.id
+  state.push(clock)
+  interaction.reply(getClockEmbed(clock))
 }
 
 const command = { data, execute }
