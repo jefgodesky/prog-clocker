@@ -2,6 +2,7 @@
   "name": "prog-clocker",
   "version": "1.0.0",
   "description": "A Discord bot for creating and tracking progress clocks, as seen in Powered by the Apocalypse and Forged in the Dark TTRPG's.",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
