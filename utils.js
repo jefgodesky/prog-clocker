@@ -1,4 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync } from 'fs'
+import { MessageAttachment, MessageEmbed } from 'discord.js'
+import config from './config/index.js'
 
 /**
  * Return an array of the file names in a directory (`dir`) that end with a
@@ -64,10 +66,33 @@ const loadJSON = (file, options) => {
 
 const hasTag = (tags, query) => tags?.map(tag => tag.toLowerCase()).includes(query.toLowerCase()) || false
 
+/**
+ * Returns an embed to display the current state of a progress clock.
+ * @param {{ name: string, max: number, curr: number, desc: string,
+ *   tags: string[]}} clock - An object representing a progress clock.
+ * @returns {object} - An object ready to be sent to the channel to display
+ *   an embed reflecting the current state of the clock.
+ */
+
+const getClockEmbed = clock => {
+  const { max, curr, name, desc, tags } = clock
+  const file = `${curr}${max}.png`
+  const thumb = new MessageAttachment(`./clocks/${file}`)
+  const embed = new MessageEmbed()
+    .setColor('#9f190b')
+    .setTitle(name)
+    .setThumbnail(`attachment://${file}`)
+    .addField('Progress', `${curr}/${max}`)
+  if (desc) embed.setDescription(desc)
+  if (tags) embed.addField('Tags', tags.join(', '))
+  return { embeds: [embed], files: [thumb] }
+}
+
 export {
   getExtFiles,
   save,
   load,
-  loadJSON
+  loadJSON,
   hasTag,
+  getClockEmbed
 }
