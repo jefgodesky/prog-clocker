@@ -1,6 +1,5 @@
 import { readdirSync, readFileSync, writeFileSync } from 'fs'
 import { MessageAttachment, MessageEmbed } from 'discord.js'
-import config from './config/index.js'
 
 /**
  * Return an array of the file names in a directory (`dir`) that end with a
@@ -125,6 +124,7 @@ const findClock = (guild, name, state) => {
  *   then a clock will be included if it has any of the tags supplied by
  *   `query.tags`. In either case, though, private clocks are only shown to the
  *   person who created them. (Default: `OR`).
+ * @param {string} uid - The user ID of the person asking for the list.
  * @param {{}[]} state - The current state.
  * @returns {{}[]} - An array of clock objects that meet the criteria laid out
  *   in the query.
@@ -135,7 +135,8 @@ const filterClocks = (query, state) => {
   const guildClocks = getGuildClocks(guild, state)
   return guildClocks.filter(clock => {
     if (hasTag(clock.tags, 'private') && clock.private !== uid) return false
-    const matches = tags.map(tag => clock.tags.includes(tag))
+    if (tags.length < 1) return true
+    const matches = tags.map(tag => clock.tags?.includes(tag) || false)
     return logic === 'AND'
       ? matches.reduce((acc, curr) => acc && curr, true)
       : matches.reduce((acc, curr) => acc || curr, false)

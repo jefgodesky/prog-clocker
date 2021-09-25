@@ -1,4 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
+import { MessageEmbed } from 'discord.js'
+import { filterClocks } from '../utils.js'
 
 const data = new SlashCommandBuilder()
   .setName('list-clocks')
@@ -12,8 +14,23 @@ const data = new SlashCommandBuilder()
     .addChoice('Any', 'OR'))
 
 const execute = async function (state, interaction) {
-  console.log(state)
-  console.log(interaction)
+  const { options } = interaction
+  const query = {
+    guild: interaction.guildId,
+    tags: options.getString('tags')?.split(/[,;]/).map(tag => tag.trim()),
+    logic: options.getString('logic') || 'OR',
+    uid: interaction.user.id
+  }
+  const clocks = filterClocks(query, state)
+  const expr = clocks.map(clock => {
+    const { name, curr, max} = clock
+    return `${name} (${curr}/${max})`
+  })
+  const embed = new MessageEmbed()
+    .setColor('#9f190b')
+    .setTitle('Ticking Clocks')
+    .setDescription(expr.join('\n'))
+  interaction.reply({ embeds: [embed] })
 }
 
 const command = { data, execute }
