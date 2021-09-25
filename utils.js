@@ -53,9 +53,21 @@ const loadJSON = (file, options) => {
   }
 }
 
+/**
+ * Tests if an array of tags includes a particular tag. This is a
+ * case-insensitive search.
+ * @param {string[]} tags - An array of tags to search.
+ * @param {string} query - A tag to search for in the array.
+ * @returns {boolean} - `true` if `query` is a tag in the array of `tags`
+ *   (regardless of case), or `false` if it is not.
+ */
+
+const hasTag = (tags, query) => tags?.map(tag => tag.toLowerCase()).includes(query.toLowerCase()) || false
+
 export {
   getExtFiles,
   save,
   load,
   loadJSON
+  hasTag,
 }
