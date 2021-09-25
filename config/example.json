@@ -1,3 +1,6 @@
 {
-  "token": "abcdefg12345678"
+  "clientId": "YOUR_SECRET_CLIENTID",
+  "guildId": "GUILD_ID",
+  "token": "SECRET_BOT_TOKEN",
+  "baseUrl": "https://clocks.s3.stackpathstorage.com/clockr##.png"
 }
