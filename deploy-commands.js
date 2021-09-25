@@ -1,16 +1,14 @@
-import { readdirSync } from 'fs'
 import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v9'
+import { forEachJSFile } from './utils.js'
 import config from './config/index.js'
 const { clientId, guildId, token } = config
 
 const commands = []
-const commandFiles = readdirSync('./commands').filter(file => file.endsWith('.js'))
-
-for (const file of commandFiles) {
+forEachJSFile('./commands', async file => {
   const command = await import(`./commands/${file}`)
   commands.push(command.default.data.toJSON())
-}
+})
 
 const rest = new REST({ version: '9' }).setToken(token)
 
