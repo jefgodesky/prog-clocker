@@ -1,0 +1,19 @@
+{
+  "name": "prog-clocker",
+  "version": "1.0.0",
+  "description": "A Discord bot for creating and tracking progress clocks, as seen in Powered by the Apocalypse and Forged in the Dark TTRPG's.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jefgodesky/prog-clocker.git"
+  },
+  "author": "Jason Godesky <jefgodesky@gmail.com>",
+  "license": "CC-BY-SA-4.0",
+  "bugs": {
+    "url": "https://github.com/jefgodesky/prog-clocker/issues"
+  },
+  "homepage": "https://github.com/jefgodesky/prog-clocker#readme"
+}
