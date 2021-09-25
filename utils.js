@@ -132,7 +132,10 @@ const filterClocks = (query, state) => {
   const { guild, tags = [], logic = 'OR', uid } = query
   const guildClocks = getGuildClocks(guild, state)
   return guildClocks.filter(clock => {
-    if (hasTag(clock.tags, 'private') && clock.private !== uid) return false
+    const askedForPrivate = tags.map(t => t.toLowerCase()).includes('private')
+    const isPrivate = hasTag(clock.tags, 'private')
+    const isMine = clock.private === uid
+    if ((isPrivate && !askedForPrivate) || (isPrivate && !isMine)) return false
     if (tags.length < 1) return true
     const matches = tags.map(tag => clock.tags?.includes(tag) || false)
     return logic === 'AND'
