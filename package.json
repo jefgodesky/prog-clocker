@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/jefgodesky/prog-clocker#readme",
   "dependencies": {
+    "@discordjs/builders": "^0.5.0",
     "discord.js": "^13.1.0"
   },
   "devDependencies": {
