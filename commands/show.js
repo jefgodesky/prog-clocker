@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { findClocks, getClockEmbed, notFound } from '../utils.js'
+import { findClocks, getClocksEmbed, notFound } from '../utils.js'
 
 const data = new SlashCommandBuilder()
   .setName('show-clock')
@@ -13,18 +13,10 @@ const execute = async function (state, interaction) {
   const guild = interaction.guildId
   const name = options.getString('name')
   const clocks = findClocks(guild, name, state)
-  let embeds = []
-  let files = []
-  let isPrivate = false
-  for (const clock of clocks) {
-    if (clock.private && clock.private !== interaction.user.id) continue
-    if (clock.private) isPrivate = true
-    const c = getClockEmbed(clock)
-    embeds = [...embeds, ...c.embeds]
-    files = [...files, ...c.files]
-  }
+  const filtered = clocks.filter(clock => !clock.private || clock.private === interaction.user.id)
+  const isPrivate = filtered.filter(clock => clock.private).length > 0
   if (clocks.length > 0) {
-    const reply = { embeds, files }
+    const reply = getClocksEmbed(filtered)
     if (isPrivate) reply.ephemeral = true
     interaction.reply(reply)
   } else {
