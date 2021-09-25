@@ -2,7 +2,7 @@ import { Client, Collection, Intents } from 'discord.js'
 import { getExtFiles, save, loadJSON } from './utils.js'
 import config from './config/index.js'
 
-const state = loadJSON('./state.json') || {}
+const state = loadJSON('./state.json') || []
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 
 client.commands = new Collection()
