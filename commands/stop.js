@@ -7,7 +7,8 @@ const data = new SlashCommandBuilder()
     .setDescription('The name of the clock you\'d like to abandon')
     .setRequired(true))
 
-const execute = async function (interaction) {
+const execute = async function (state, interaction) {
+  console.log(state)
   console.log(interaction)
 }
 

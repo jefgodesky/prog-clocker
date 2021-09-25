@@ -1,7 +1,7 @@
 const ready = {
   name: 'ready',
   once: true,
-  execute (client) {
+  execute () {
     console.log('Prog Clocker is ready to clock')
   }
 }

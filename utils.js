@@ -1,4 +1,4 @@
-import { readdirSync } from 'fs'
+import { readdirSync, writeFileSync } from 'fs'
 
 /**
  * Run a function (`fn`) on each file in a directory (`dir`) that ends
@@ -15,6 +15,18 @@ const forEachJSFile = (dir, fn) => {
   }
 }
 
+/**
+ * Handy wrapper for fs.writeFileSync.
+ * @param {string} file - The file to write to.
+ * @param {string} data - The string that is to be written to the file.
+ * @param {object?} options - Options to pass to fs.writeFileSync.
+ */
+
+const save = (file, data, options) => {
+  return writeFileSync(file, data, options)
+}
+
 export {
-  forEachJSFile
+  forEachJSFile,
+  save
 }

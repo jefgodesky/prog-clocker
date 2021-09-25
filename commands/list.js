@@ -11,7 +11,8 @@ const data = new SlashCommandBuilder()
     .addChoice('All', 'AND')
     .addChoice('Any', 'OR'))
 
-const execute = async function (interaction) {
+const execute = async function (state, interaction) {
+  console.log(state)
   console.log(interaction)
 }
 

@@ -19,7 +19,8 @@ const data = new SlashCommandBuilder()
     .setDescription('Comma- or semicolon-separated list of tags')
     .setRequired(false))
 
-const execute = async function (interaction) {
+const execute = async function (state, interaction) {
+  console.log(state)
   console.log(interaction)
 }
 
