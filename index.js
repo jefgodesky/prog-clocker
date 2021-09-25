@@ -7,24 +7,20 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 client.commands = new Collection()
 const commandFiles = readdirSync('./commands').filter(file => file.endsWith('.js'))
 for (const file of commandFiles) {
-  const command = await import(`./commands/${file}`)
-  client.commands.set(command.default.data.name, command.default)
+  const cmd = await import(`./commands/${file}`)
+  const command = cmd.default
+  client.commands.set(command.data.name, command)
 }
 
-client.once('ready', () => {
-  console.log('Prog Clocker is ready to clock')
-})
-
-client.on('interactionCreate', async interaction => {
-  if (!interaction.isCommand()) return
-  const command = client.commands.get(interaction.commandName)
-  if (!command) return
-  try {
-    await command.execute(interaction)
-  } catch (err) {
-    console.error(err)
-    await interaction.reply({ content: 'Sorry, we ran into a problem executing that command.', ephemeral: true })
+const eventFiles = readdirSync('./events').filter(file => file.endsWith('.js'))
+for (const file of eventFiles) {
+  const evt = await import(`./events/${file}`)
+  const event = evt.default
+  if (event.once) {
+    client.once(event.name, (...args) => event.execute(client, ...args))
+  } else {
+    client.on(event.name, (...args) => event.execute(client, ...args))
   }
-})
+}
 
 client.login(config.token)
