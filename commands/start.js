@@ -28,9 +28,13 @@ const execute = async function (state, interaction) {
   const desc = options.getString('desc')
   const tags = options.getString('tags')?.split(/[,;]/).map(tag => tag.trim())
   const clock = { guild, name, max: length, curr: 0, desc, tags }
-  if (hasTag(tags, 'Private')) clock.private = interaction.user.id
+  const isPrivate = hasTag(tags, 'Private')
+  if (isPrivate) clock.private = interaction.user.id
   state.push(clock)
-  interaction.reply(getClockEmbed(clock))
+  const reply = isPrivate
+    ? Object.assign({}, getClockEmbed(clock), { ephemeral: true })
+    : getClockEmbed(clock)
+  interaction.reply(reply)
 }
 
 const command = { data, execute }
