@@ -1,8 +1,9 @@
 import { Client, Collection, Intents } from 'discord.js'
-import { forEachJSFile, save } from './utils.js'
+import { forEachJSFile, save, loadJSON } from './utils.js'
 import config from './config/index.js'
 
-const state = {}
+const state = loadJSON('./state.json') || {}
+console.log(state)
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 
 client.commands = new Collection()

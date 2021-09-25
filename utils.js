@@ -1,4 +1,4 @@
-import { readdirSync, writeFileSync } from 'fs'
+import { readdirSync, readFileSync, writeFileSync } from 'fs'
 
 /**
  * Run a function (`fn`) on each file in a directory (`dir`) that ends
@@ -26,7 +26,38 @@ const save = (file, data, options) => {
   return writeFileSync(file, data, options)
 }
 
+/**
+ * Handy wrapper for fs.readFileSync.
+ * @param {string} file - The file to read.
+ * @param {object?} options - Options to pass to fs.readFileSync.
+ * @returns {string} - The contents of the file.
+ */
+
+const load = (file, options) => {
+  return readFileSync(file, options)
+}
+
+/**
+ * Reads the contents of a JSON file into a JavaScript object.
+ * @param {string} file - The file to read.
+ * @param {object?} options - Options to pass to fs.readFileSync.
+ * @returns {object|null} - The JavaScript object formed by parsing the JSON in
+ *   the specified file, or `null` if the file did not provide parsable JSON.
+ */
+
+const loadJSON = (file, options) => {
+  if (!file.endsWith('.json')) return null
+  try {
+    const content = load(file, options)
+    return JSON.parse(content)
+  } catch {
+    return null
+  }
+}
+
 export {
   forEachJSFile,
-  save
+  save,
+  load,
+  loadJSON
 }
