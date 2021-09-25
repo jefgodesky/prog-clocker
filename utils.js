@@ -88,6 +88,30 @@ const getClockEmbed = clock => {
 }
 
 /**
+ * Return embeds for one or more clocks.
+ * @param {{}|{}[]} clocks - Either an object representing a single clock, or
+ *   an array of such objects.
+ * @returns {{files: MessageAttachment[], embeds: MessageEmbed[]}} - An object
+ *   ready to be sent as a reply with one or more embeds, representing the
+ *   clocks provided.
+ */
+
+const getClocksEmbed = clocks => {
+  if (Array.isArray(clocks)) {
+    let embeds = []
+    let files = []
+    for (const clock of clocks) {
+      const c = getClockEmbed(clock)
+      embeds = [ ...embeds, ...c.embeds ]
+      files = [ ...files, ...c.files ]
+    }
+    return { embeds, files }
+  } else {
+    return getClockEmbed(clocks)
+  }
+}
+
+/**
  * Return only those clocks that were made for the specified guild.
  * @param {string} guild - The guild ID.
  * @param {{}[]} state - The current state.
@@ -161,6 +185,7 @@ export {
   loadJSON,
   hasTag,
   getClockEmbed,
+  getClocksEmbed,
   getGuildClocks,
   findClocks,
   filterClocks,
