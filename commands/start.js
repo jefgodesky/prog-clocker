@@ -23,11 +23,12 @@ const data = new SlashCommandBuilder()
 const execute = async function (state, interaction) {
   const { options } = interaction
   const guild = interaction.guildId
+  const id = state.length === 0 ? 0 : Math.max(...state.map(state => state.id) + 1)
   const name = options.getString('name')
   const length = options.getInteger('length')
   const desc = options.getString('desc')
   const tags = options.getString('tags')?.split(/[,;]/).map(tag => tag.trim())
-  const clock = { guild, name, max: length, curr: 0, desc, tags }
+  const clock = { id, guild, name, max: length, curr: 0, desc, tags }
   const isPrivate = hasTag(tags, 'Private')
   if (isPrivate) clock.private = interaction.user.id
   state.push(clock)
