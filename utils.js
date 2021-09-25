@@ -89,6 +89,16 @@ const getClockEmbed = clock => {
 }
 
 /**
+ * Return only those clocks that were made for the specified guild.
+ * @param {string} guild - The guild ID.
+ * @param {{}[]} state - The current state.
+ * @returns {{}|null} - An array of clock objects, containing only those clocks
+ *   for which the `guild` property equals the given guild ID.
+ */
+
+const getGuildClocks = (guild, state) => state.filter(clock => clock.guild === guild)
+
+/**
  * Return the first clock in the state that has the guild ID and the name
  * requested.
  * @param {string} guild - The guild ID.
@@ -99,7 +109,8 @@ const getClockEmbed = clock => {
  */
 
 const findClock = (guild, name, state) => {
-  const matches = state.filter(clock => clock.guild === guild && clock.name.toLowerCase() === name.toLowerCase())
+  const guildClocks = getGuildClocks(guild, state)
+  const matches = guildClocks.filter(clock => clock.name.toLowerCase() === name.toLowerCase())
   return matches.length > 0 ? matches[0] : null
 }
 
