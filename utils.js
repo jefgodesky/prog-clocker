@@ -103,14 +103,12 @@ const getGuildClocks = (guild, state) => state.filter(clock => clock.guild === g
  * @param {string} guild - The guild ID.
  * @param {string} name - The name of the clock to find.
  * @param {{}[]} state - The current state.
- * @returns {{}|null} - The clock object requested, or `null` if it could not
- *   be found.
+ * @returns {{}[]} - An array of clock object with the name provided.
  */
 
-const findClock = (guild, name, state) => {
+const findClocks = (guild, name, state) => {
   const guildClocks = getGuildClocks(guild, state)
-  const matches = guildClocks.filter(clock => clock.name.toLowerCase() === name.toLowerCase())
-  return matches.length > 0 ? matches[0] : null
+  return guildClocks.filter(clock => clock.name.toLowerCase() === name.toLowerCase())
 }
 
 /**
@@ -161,7 +159,7 @@ export {
   hasTag,
   getClockEmbed,
   getGuildClocks,
-  findClock,
+  findClocks,
   filterClocks,
   notFound
 }
