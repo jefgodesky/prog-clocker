@@ -20,15 +20,12 @@ const execute = async function (state, interaction) {
     if (clock.private && clock.private !== interaction.user.id) continue
     if (clock.private) isPrivate = true
     const c = getClockEmbed(clock)
-    console.log(c)
     embeds = [...embeds, ...c.embeds]
     files = [...files, ...c.files]
-    console.log({ embeds, files })
   }
   if (clocks.length > 0) {
     const reply = { embeds, files }
     if (isPrivate) reply.ephemeral = true
-    console.log(reply)
     interaction.reply(reply)
   } else {
     interaction.reply({ content: notFound(name), ephemeral: true })
