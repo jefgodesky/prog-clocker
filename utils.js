@@ -114,6 +114,34 @@ const findClock = (guild, name, state) => {
   return matches.length > 0 ? matches[0] : null
 }
 
+/**
+ * Filter clocks by the logic presented in the `query`.
+ * @param {object} query - An object representing the query to be used.
+ * @param {string} query.guild - The guild ID.
+ * @param {string[]?} query.tags - The tags to filter by.
+ * @param {string?} [query.logic = 'OR'] - The logic to use when filtering by
+ *   tags. If set to `AND`, a clock must have all of the tags supplied by
+ *   `query.tags` in order to be included. If set to `OR~ (or any other value),
+ *   then a clock will be included if it has any of the tags supplied by
+ *   `query.tags`. In either case, though, private clocks are only shown to the
+ *   person who created them. (Default: `OR`).
+ * @param {{}[]} state - The current state.
+ * @returns {{}[]} - An array of clock objects that meet the criteria laid out
+ *   in the query.
+ */
+
+const filterClocks = (query, state) => {
+  const { guild, tags = [], logic = 'OR', uid } = query
+  const guildClocks = getGuildClocks(guild, state)
+  return guildClocks.filter(clock => {
+    if (hasTag(clock.tags, 'private') && clock.private !== uid) return false
+    const matches = tags.map(tag => clock.tags.includes(tag))
+    return logic === 'AND'
+      ? matches.reduce((acc, curr) => acc && curr, true)
+      : matches.reduce((acc, curr) => acc || curr, false)
+  })
+}
+
 export {
   getExtFiles,
   save,
@@ -122,5 +150,6 @@ export {
   hasTag,
   getClockEmbed,
   getGuildClocks,
-  findClock
+  findClock,
+  filterClocks
 }
