@@ -13,7 +13,7 @@ const execute = async function (state, interaction) {
   const guild = interaction.guildId
   const name = options.getString('name')
   const clock = findClock(guild, name, state)
-  if (!clock) {
+  if (!clock || clock.private !== interaction.user.id) {
     interaction.reply({
       content: `Sorry, we couldn't find any clock with the name “${name},” but as a bot, I can be persnickety about precise spelling. You could try the \`/list-clocks\` command to get the exact spelling of the clock you’re looking for.`,
       ephemeral: true
