@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/jefgodesky/prog-clocker/issues"
   },
-  "homepage": "https://github.com/jefgodesky/prog-clocker#readme"
+  "homepage": "https://github.com/jefgodesky/prog-clocker#readme",
+  "dependencies": {
+    "discord.js": "^13.1.0"
+  }
 }
