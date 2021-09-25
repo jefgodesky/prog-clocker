@@ -88,11 +88,27 @@ const getClockEmbed = clock => {
   return { embeds: [embed], files: [thumb] }
 }
 
+/**
+ * Return the first clock in the state that has the guild ID and the name
+ * requested.
+ * @param {string} guild - The guild ID.
+ * @param {string} name - The name of the clock to find.
+ * @param {{}[]} state - The current state.
+ * @returns {{}|null} - The clock object requested, or `null` if it could not
+ *   be found.
+ */
+
+const findClock = (guild, name, state) => {
+  const matches = state.filter(clock => clock.guild === guild && clock.name.toLowerCase() === name.toLowerCase())
+  return matches.length > 0 ? matches[0] : null
+}
+
 export {
   getExtFiles,
   save,
   load,
   loadJSON,
   hasTag,
-  getClockEmbed
+  getClockEmbed,
+  findClock
 }
