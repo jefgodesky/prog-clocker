@@ -143,6 +143,16 @@ const filterClocks = (query, state) => {
   })
 }
 
+/**
+ * Return a standard error message for when a clock cannot be found by name.
+ * @param {string} name - The name supplied for the clock that could not
+ *   be found.
+ * @returns {string} - A standard error message suitable to be displayed when a
+ *   clock is requested by name and cannot be found.
+ */
+
+const notFound = name => `Sorry, we couldn't find any clock with the name “${name},” but as a bot, I can be persnickety about precise spelling. You could try the \`/list-clocks\` command to get the exact spelling of the clock you’re looking for.`
+
 export {
   getExtFiles,
   save,
@@ -152,5 +162,6 @@ export {
   getClockEmbed,
   getGuildClocks,
   findClock,
-  filterClocks
+  filterClocks,
+  notFound
 }
