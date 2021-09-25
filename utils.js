@@ -121,5 +121,6 @@ export {
   loadJSON,
   hasTag,
   getClockEmbed,
+  getGuildClocks,
   findClock
 }
