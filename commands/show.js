@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { getOptions, findClocks, includesPrivateClocks, getClockReply, notFound } from '../utils.js'
+import { getOptions, findClocks, getClockReply, notFound } from '../utils.js'
 
 const data = new SlashCommandBuilder()
   .setName('show-clock')
@@ -13,7 +13,7 @@ const execute = async function (state, interaction) {
   const clocks = findClocks(guild, name, state)
   const filtered = clocks.filter(clock => !clock.private || clock.private === interaction.user.id)
   if (clocks.length > 0) {
-    interaction.reply(getClockReply(filtered, includesPrivateClocks(filtered)))
+    interaction.reply(getClockReply(filtered))
   } else {
     interaction.reply({ content: notFound(name), ephemeral: true })
   }
