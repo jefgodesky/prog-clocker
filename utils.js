@@ -200,7 +200,7 @@ const findClocks = (guild, name, state) => {
  *   then a clock will be included if it has any of the tags supplied by
  *   `query.tags`. In either case, though, private clocks are only shown to the
  *   person who created them. (Default: `OR`).
- * @param {string} uid - The user ID of the person asking for the list.
+ * @param {string} query.uid - The user ID of the person asking for the list.
  * @param {{}[]} state - The current state.
  * @returns {{}[]} - An array of clock objects that meet the criteria laid out
  *   in the query.
@@ -210,10 +210,7 @@ const filterClocks = (query, state) => {
   const { guild, tags = [], logic = 'OR', uid } = query
   const guildClocks = getGuildClocks(guild, state)
   return guildClocks.filter(clock => {
-    const askedForPrivate = tags.map(t => t.toLowerCase()).includes('private')
-    const isPrivate = hasTag(clock.tags, 'private')
-    const isMine = clock.private === uid
-    if ((isPrivate && !askedForPrivate) || (isPrivate && !isMine)) return false
+    if (!visibleClock(clock, uid)) return false
     if (tags.length < 1) return true
     const matches = tags.map(tag => clock.tags?.includes(tag) || false)
     return logic === 'AND'
