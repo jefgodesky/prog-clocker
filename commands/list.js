@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { MessageEmbed } from 'discord.js'
-import { getOptions, filterClocks, includesPrivateClocks } from '../utils.js'
+import { getOptions, filterClocks } from '../utils.js'
 
 const data = new SlashCommandBuilder()
   .setName('list-clocks')
@@ -14,12 +14,12 @@ const data = new SlashCommandBuilder()
     .addChoice('Any', 'OR'))
 
 const execute = async function (state, interaction) {
-  const { guild, tags, logic } = getOptions(['guild', 'tags', 'logic'], interaction)
+  const { guild, uid, tags, logic } = getOptions(['guild', 'uid', 'tags', 'logic'], interaction)
   const query = {
     guild,
     tags: tags?.split(/[,;]/).map(tag => tag.trim()),
     logic: logic || 'OR',
-    uid: interaction.user.id
+    uid
   }
   const clocks = filterClocks(query, state)
   const expr = clocks.map(clock => {
@@ -30,7 +30,7 @@ const execute = async function (state, interaction) {
     .setColor('#9f190b')
     .setTitle('Ticking Clocks')
     .setDescription(expr.join('\n'))
-  const ephemeral = includesPrivateClocks(clocks)
+  const ephemeral = clocks.filter(clock => clock.private).length > 0
   interaction.reply({ embeds: [embed], ephemeral })
 }
 
