@@ -22,10 +22,13 @@ const execute = async function (state, interaction) {
     const { name, curr, max} = clock
     return `${name} (${curr}/${max})`
   })
+  const desc = expr.length > 0
+    ? expr.join('\n')
+    : '_You don’t have any clocks ticking right now. You can start one with the_ `/start-clock` _command._'
   const embed = new MessageEmbed()
     .setColor('#9f190b')
     .setTitle('Ticking Clocks')
-    .setDescription(expr.join('\n'))
+    .setDescription(desc)
   const ephemeral = clocks.filter(clock => clock.private).length > 0
   interaction.reply({ embeds: [embed], ephemeral })
 }
