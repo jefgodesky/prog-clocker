@@ -66,6 +66,19 @@ const loadJSON = (file, options) => {
 const hasTag = (tags, query) => tags?.map(tag => tag.toLowerCase()).includes(query.toLowerCase()) || false
 
 /**
+ * Returns `true` if you're allowed to see this clock, or `false` if you
+ * are not.
+ * @param {{ private: string }} clock - The clock object.
+ * @param {string} uid - The ID of the user we're testing.
+ * @returns {boolean} - `true` if the user identified by the given ID (`uid`)
+ *   has permission to see the clock (either because it isn't private, or
+ *   because it's one of the user's private clocks), or `false` if hen does
+ *   not have permission to see it.
+ */
+
+const visibleClock = (clock, uid) => !clock.private || clock.private === uid
+
+/**
  * Get the options from an interaction.
  * @param {string[]} opts - An array of the names of the options requested.
  *   This can also include `guild`, which will return the guild ID, and `uid`,
