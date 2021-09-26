@@ -66,6 +66,28 @@ const loadJSON = (file, options) => {
 const hasTag = (tags, query) => tags?.map(tag => tag.toLowerCase()).includes(query.toLowerCase()) || false
 
 /**
+ * Get the options from an interaction.
+ * @param {string[]} opts - An array of the names of the options requested.
+ *   This can also include `guild`, which will return the guild ID.
+ * @param {object} interaction - The interaction object.
+ * @returns {{}} - An object with keys for each option named in `opts`, with
+ *   value set to the value of that option taken from the interaction.
+ */
+
+const getOptions = (opts, interaction) => {
+  const { options } = interaction
+  const obj = {}
+  for (const opt of opts) {
+    if (opt.toLowerCase() === 'guild') {
+      obj.guild = interaction.guildId
+    } else {
+      obj[opt] = options.getString(opt)
+    }
+  }
+  return obj
+}
+
+/**
  * Returns an embed to display the current state of a progress clock.
  * @param {{ name: string, max: number, curr: number, desc: string,
  *   tags: string[]}} clock - An object representing a progress clock.
