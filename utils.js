@@ -92,15 +92,10 @@ const getOptions = (opts, interaction) => {
 const hasTag = (clock, tag) => clock.tags?.map(t => t.toLowerCase().trim()).includes(tag.toLowerCase().trim())
 
 /**
- * Tells you if a given user (identified by hens user ID) has permissions to
- * see the given clock.
- * @param {{ private: string }} clock - The clock in question.
- * @param {string} uid - The ID of the user we're checking.
- * @returns {boolean} - `true` if the user identified by the given ID (`uid`)
- *   has permission to see the clock (`clock`), or `false` if hen does not.
+ * Render a single clock.
+ * @param {{}} clock - The clock object to render.
+ * @returns {{}} - An object that can be sent as a reply to the command.
  */
-
-const visibleClock = (clock, uid) => !clock.private || clock.private === uid
 
 const showClock = clock => {
   const { id, max, curr, name, desc, tags } = clock
@@ -132,6 +127,20 @@ const showClock = clock => {
 
   return { embeds: [embed], files: [thumb], components: [row] }
 }
+
+/**
+ * Find all of the clocks that have a given name, and show the first one found
+ * (or another, if given an `offset`), along with a button to see the next one
+ * if more than one clock has that name.
+ * @param {string} name - The name of the clock (or clocks) to show.
+ * @param {{}[]} state - The current state.
+ * @param {{}} params - Parameters for what to display.
+ * @param {string} params.guild - The guild ID.
+ * @param {string} params.uid - The ID of the user who issued the command.
+ * @param {number} [params.offset = 0] - The offset of the clock to display, if
+ *   we're not showing the first one.
+ * @returns {{}} - An object that can be sent as a reply to the command.
+ */
 
 const showClocks = (name, state, params) => {
   const { guild, uid, offset = 0 } = params
