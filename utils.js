@@ -71,7 +71,7 @@ const getOptions = (opts, interaction) => {
     switch (opt.toLowerCase()) {
       case 'guild': obj.guild = interaction.guildId; break
       case 'uid': obj.uid = interaction.user.id; break
-      case 'tags': obj.tags = options.getString('tags')?.split(/[,;]/).map(tag => tag.trim())
+      case 'tags': obj.tags = options.getString('tags')?.split(/[,;]/).map(tag => tag.trim()); break
       default:
         const raw = options.get(opt)
         obj[opt] = raw?.value
