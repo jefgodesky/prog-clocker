@@ -25,7 +25,7 @@ const execute = async function (state, interaction) {
   const id = state.length === 0 ? 0 : Math.max(...state.map(state => state.id)) + 1
   const t = tags?.split(/[,;]/).map(tag => tag.trim())
   const clock = { id, guild, name, max: length, curr: 0, desc, tags: t }
-  const isPrivate = hasTag(tags, 'Private')
+  const isPrivate = hasTag(t, 'Private')
   if (isPrivate) clock.private = interaction.user.id
   state.push(clock)
   interaction.reply(getClockReply(clock, isPrivate))
