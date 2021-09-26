@@ -220,20 +220,6 @@ const filterClocks = (query, state) => {
 }
 
 /**
- * Checks if an array of clock objects includes any private clocks.
- * @param {{}|{}[]} clocks - A single clock object, or an array of clock
- *   objects.
- * @returns {boolean} - `true` if given one or more private clocks, or `false`
- *   if none of the clocks provided are private.
- */
-
-const includesPrivateClocks = clocks => {
-  const arr = Array.isArray(clocks) ? clocks : [clocks]
-  const privateClocks = arr.filter(clock => clock.private)
-  return privateClocks.length > 0
-}
-
-/**
  * Return a standard error message for when a clock cannot be found by name.
  * @param {string} name - The name supplied for the clock that could not
  *   be found.
