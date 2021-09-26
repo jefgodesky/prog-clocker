@@ -113,7 +113,7 @@ const getOptions = (opts, interaction) => {
  */
 
 const getClockEmbed = clock => {
-  const { max, curr, name, desc, tags } = clock
+  const { id, max, curr, name, desc, tags } = clock
   const c = Math.min(curr, max)
   const file = `${c}${max}.png`
   const thumb = new MessageAttachment(`./clocks/${file}`)
@@ -127,15 +127,15 @@ const getClockEmbed = clock => {
   if (tags) embed.addField('Tags', tags.join(', '))
 
   const advance = new MessageButton()
-    .setCustomId('advance')
+    .setCustomId(`advance[${id}]`)
     .setLabel('Advance')
     .setStyle('PRIMARY')
   const back = new MessageButton()
-    .setCustomId('remove')
+    .setCustomId(`remove[${id}]`)
     .setLabel('Remove')
     .setStyle('SECONDARY')
   const drop = new MessageButton()
-    .setCustomId('drop')
+    .setCustomId(`drop[${id}]`)
     .setLabel('Drop')
     .setStyle('DANGER')
   const row = new MessageActionRow().addComponents([advance, back, drop])
@@ -158,7 +158,7 @@ const getClockReply = (clocks, offset = 0) => {
   if (clock.private) reply.ephemeral = true
   if (Array.isArray(clocks) && clocks.length > 1) {
     const next = new MessageButton()
-      .setCustomId('next')
+      .setCustomId(`next[${JSON.stringify({ clocks, offset: offset + 1 })}]`)
       .setLabel('Next Clock')
       .setStyle('SECONDARY')
     reply.components[0].addComponents([next])
