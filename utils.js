@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, writeFileSync } from 'fs'
-import { MessageAttachment, MessageEmbed } from 'discord.js'
+import { MessageAttachment, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js'
 
 /**
  * Return an array of the file names in a directory (`dir`) that end with a
@@ -125,43 +125,44 @@ const getClockEmbed = clock => {
     .addField('Progress', `${c}/${max}`)
   if (desc) embed.setDescription(desc)
   if (tags) embed.addField('Tags', tags.join(', '))
-  return { embeds: [embed], files: [thumb] }
-}
 
-/**
- * Return embeds for one or more clocks.
- * @param {{}|{}[]} clocks - Either an object representing a single clock, or
- *   an array of such objects.
- * @returns {{files: MessageAttachment[], embeds: MessageEmbed[]}} - An object
- *   ready to be sent as a reply with one or more embeds, representing the
- *   clocks provided.
- */
+  const advance = new MessageButton()
+    .setCustomId('advance')
+    .setLabel('Advance')
+    .setStyle('PRIMARY')
+  const back = new MessageButton()
+    .setCustomId('remove')
+    .setLabel('Remove')
+    .setStyle('SECONDARY')
+  const drop = new MessageButton()
+    .setCustomId('drop')
+    .setLabel('Drop')
+    .setStyle('DANGER')
+  const row = new MessageActionRow().addComponents([advance, back, drop])
 
-const getClocksEmbed = clocks => {
-  if (Array.isArray(clocks)) {
-    let embeds = []
-    let files = []
-    for (const clock of clocks) {
-      const c = getClockEmbed(clock)
-      embeds = [ ...embeds, ...c.embeds ]
-      files = [ ...files, ...c.files ]
-    }
-    return { embeds, files }
-  } else {
-    return getClockEmbed(clocks)
-  }
+  return { embeds: [embed], files: [thumb], components: [row] }
 }
 
 /**
  * Formulate a reply that shows embeds for one or more clocks.
  * @param {{}|{}[]} clocks - Either an object representing a single clock, or
  *   an array of such objects.
+ * @param {number} [offset = 0] - The offset for the clock to display
+ *   (Default: `0`0.
  * @returns {object} - A reply object with embeds for each of the clocks given.
  */
 
-const getClockReply = (clocks) => {
-  const reply = getClocksEmbed(clocks)
-  if (includesPrivateClocks(clocks)) reply.ephemeral = true
+const getClockReply = (clocks, offset = 0) => {
+  const clock = Array.isArray(clocks) ? clocks[offset % clocks.length] : clocks
+  const reply = getClockEmbed(clock)
+  if (clock.private) reply.ephemeral = true
+  if (Array.isArray(clocks) && clocks.length > 1) {
+    const next = new MessageButton()
+      .setCustomId('next')
+      .setLabel('Next Clock')
+      .setStyle('SECONDARY')
+    reply.components[0].addComponents([next])
+  }
   return reply
 }
 
@@ -237,11 +238,9 @@ export {
   hasTag,
   getOptions,
   getClockEmbed,
-  getClocksEmbed,
   getClockReply,
   getGuildClocks,
   findClocks,
   filterClocks,
-  includesPrivateClocks,
   notFound
 }
