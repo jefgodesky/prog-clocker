@@ -246,6 +246,21 @@ const findClocks = (query, state) => {
 }
 
 /**
+ * Return the clock with the given ID.
+ * @param {string} id - The ID of the clock to find.
+ * @param {string} guild - The guild ID.
+ * @param {string} uid - The ID of the user who issued the command.
+ * @param {{}[]} state - An array of the clock objects to search through.
+ * @returns {{}|null} - The clock object, if a valid clock could be found, or
+ *   `null` if it could not.
+ */
+
+const findClockById = (id, guild, uid, state) => {
+  const clocks = getVisibleGuildClocks(state, guild, uid).filter(clock => clock.id === id)
+  return clocks.length > 0 ? clocks[0] : null
+}
+
+/**
  * Return a standard error message for when a clock cannot be found by name.
  * @param {string} name - The name supplied for the clock that could not
  *   be found.
@@ -266,5 +281,6 @@ export {
   showClocks,
   reshowClock,
   findClocks,
+  findClockById,
   notFound
 }
