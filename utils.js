@@ -164,6 +164,21 @@ const showClocks = (name, state, params) => {
 }
 
 /**
+ * Delete the message that the interaction was responding to, and then reply
+ * to it with a new message rendering the clock.
+ * @param {{}} interaction - The interaction object.
+ * @param {{}} clock - The clock object.
+ * @returns {Promise<void>} - A Promise that resolves when the old message has
+ *   been deleted and the clock has been rendered and posted.
+ */
+
+const reshowClock = async (interaction, clock) => {
+  const msg = await interaction.channel.messages.fetch(interaction.message.id)
+  await msg.delete()
+  await interaction.reply(showClock(clock))
+}
+
+/**
  * Return a subset of the clocks given that have the given guild.
  * @param {{ guild: string}[]} clocks - The initial array of clock objects.
  * @param {string} guild - The guild ID.
@@ -249,6 +264,7 @@ export {
   hasTag,
   showClock,
   showClocks,
+  reshowClock,
   findClocks,
   notFound
 }
