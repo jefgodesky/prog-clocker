@@ -1,4 +1,4 @@
-const interactionCreate = {
+const command = {
   name: 'interactionCreate',
   async execute (client, state, interaction) {
     if (!interaction.isCommand()) return
@@ -13,4 +13,4 @@ const interactionCreate = {
   }
 }
 
-export default interactionCreate
+export default command

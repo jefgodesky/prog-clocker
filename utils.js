@@ -55,30 +55,6 @@ const loadJSON = (file, options) => {
 }
 
 /**
- * Tests if an array of tags includes a particular tag. This is a
- * case-insensitive search.
- * @param {string[]} tags - An array of tags to search.
- * @param {string} query - A tag to search for in the array.
- * @returns {boolean} - `true` if `query` is a tag in the array of `tags`
- *   (regardless of case), or `false` if it is not.
- */
-
-const hasTag = (tags, query) => tags?.map(tag => tag.toLowerCase()).includes(query.toLowerCase()) || false
-
-/**
- * Returns `true` if you're allowed to see this clock, or `false` if you
- * are not.
- * @param {{ private: string }} clock - The clock object.
- * @param {string} uid - The ID of the user we're testing.
- * @returns {boolean} - `true` if the user identified by the given ID (`uid`)
- *   has permission to see the clock (either because it isn't private, or
- *   because it's one of the user's private clocks), or `false` if hen does
- *   not have permission to see it.
- */
-
-const visibleClock = (clock, uid) => !clock.private || clock.private === uid
-
-/**
  * Get the options from an interaction.
  * @param {string[]} opts - An array of the names of the options requested.
  *   This can also include `guild`, which will return the guild ID, and `uid`,
@@ -105,122 +81,6 @@ const getOptions = (opts, interaction) => {
 }
 
 /**
- * Returns an embed to display the current state of a progress clock.
- * @param {{ name: string, max: number, curr: number, desc: string,
- *   tags: string[]}} clock - An object representing a progress clock.
- * @returns {object} - An object ready to be sent to the channel to display
- *   an embed reflecting the current state of the clock.
- */
-
-const getClockEmbed = clock => {
-  const { id, max, curr, name, desc, tags } = clock
-  const c = Math.min(curr, max)
-  const file = `${c}${max}.png`
-  const thumb = new MessageAttachment(`./clocks/${file}`)
-  const color = c >= max ? '#ffd300' : '#9f190b'
-  const embed = new MessageEmbed()
-    .setColor(color)
-    .setTitle(name)
-    .setThumbnail(`attachment://${file}`)
-    .addField('Progress', `${c}/${max}`)
-  if (desc) embed.setDescription(desc)
-  if (tags) embed.addField('Tags', tags.join(', '))
-
-  const advance = new MessageButton()
-    .setCustomId(`advance[${id}]`)
-    .setLabel('Advance')
-    .setStyle('PRIMARY')
-  const back = new MessageButton()
-    .setCustomId(`remove[${id}]`)
-    .setLabel('Remove')
-    .setStyle('SECONDARY')
-  const drop = new MessageButton()
-    .setCustomId(`drop[${id}]`)
-    .setLabel('Drop')
-    .setStyle('DANGER')
-  const row = new MessageActionRow().addComponents([advance, back, drop])
-
-  return { embeds: [embed], files: [thumb], components: [row] }
-}
-
-/**
- * Formulate a reply that shows embeds for one or more clocks.
- * @param {{}|{}[]} clocks - Either an object representing a single clock, or
- *   an array of such objects.
- * @param {number} [offset = 0] - The offset for the clock to display
- *   (Default: `0`0.
- * @returns {object} - A reply object with embeds for each of the clocks given.
- */
-
-const getClockReply = (clocks, offset = 0) => {
-  const clock = Array.isArray(clocks) ? clocks[offset % clocks.length] : clocks
-  const reply = getClockEmbed(clock)
-  if (clock.private) reply.ephemeral = true
-  if (Array.isArray(clocks) && clocks.length > 1) {
-    const next = new MessageButton()
-      .setCustomId(`next[${JSON.stringify({ clocks, offset: offset + 1 })}]`)
-      .setLabel('Next Clock')
-      .setStyle('SECONDARY')
-    reply.components[0].addComponents([next])
-  }
-  return reply
-}
-
-/**
- * Return only those clocks that were made for the specified guild.
- * @param {string} guild - The guild ID.
- * @param {{}[]} state - The current state.
- * @returns {{}|null} - An array of clock objects, containing only those clocks
- *   for which the `guild` property equals the given guild ID.
- */
-
-const getGuildClocks = (guild, state) => state.filter(clock => clock.guild === guild)
-
-/**
- * Return the first clock in the state that has the guild ID and the name
- * requested.
- * @param {string} guild - The guild ID.
- * @param {string} name - The name of the clock to find.
- * @param {{}[]} state - The current state.
- * @returns {{}[]} - An array of clock object with the name provided.
- */
-
-const findClocks = (guild, name, state) => {
-  const guildClocks = getGuildClocks(guild, state)
-  return guildClocks.filter(clock => clock.name.toLowerCase() === name.toLowerCase())
-}
-
-/**
- * Filter clocks by the logic presented in the `query`.
- * @param {object} query - An object representing the query to be used.
- * @param {string} query.guild - The guild ID.
- * @param {string[]?} query.tags - The tags to filter by.
- * @param {string?} [query.logic = 'OR'] - The logic to use when filtering by
- *   tags. If set to `AND`, a clock must have all of the tags supplied by
- *   `query.tags` in order to be included. If set to `OR~ (or any other value),
- *   then a clock will be included if it has any of the tags supplied by
- *   `query.tags`. In either case, though, private clocks are only shown to the
- *   person who created them. (Default: `OR`).
- * @param {string} query.uid - The user ID of the person asking for the list.
- * @param {{}[]} state - The current state.
- * @returns {{}[]} - An array of clock objects that meet the criteria laid out
- *   in the query.
- */
-
-const filterClocks = (query, state) => {
-  const { guild, tags = [], logic = 'OR', uid } = query
-  const guildClocks = getGuildClocks(guild, state)
-  return guildClocks.filter(clock => {
-    if (!visibleClock(clock, uid)) return false
-    if (tags.length < 1) return true
-    const matches = tags.map(tag => clock.tags?.includes(tag) || false)
-    return logic === 'AND'
-      ? matches.reduce((acc, curr) => acc && curr, true)
-      : matches.reduce((acc, curr) => acc || curr, false)
-  })
-}
-
-/**
  * Return a standard error message for when a clock cannot be found by name.
  * @param {string} name - The name supplied for the clock that could not
  *   be found.
@@ -235,12 +95,6 @@ export {
   save,
   load,
   loadJSON,
-  hasTag,
   getOptions,
-  getClockEmbed,
-  getClockReply,
-  getGuildClocks,
-  findClocks,
-  filterClocks,
   notFound
 }

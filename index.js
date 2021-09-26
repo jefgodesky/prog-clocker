@@ -13,6 +13,14 @@ for (const file of commandFiles) {
   client.commands.set(command.data.name, command)
 }
 
+client.buttons = new Collection()
+const buttonFiles = getExtFiles('./buttons', '.js')
+for (const file of buttonFiles) {
+  const btn = await import(`./buttons/${file}`)
+  const button = btn.default
+  client.buttons.set(button.id, button)
+}
+
 const eventFiles = getExtFiles('./events', '.js')
 for (const file of eventFiles) {
   const evt = await import(`./events/${file}`)
