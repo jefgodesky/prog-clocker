@@ -68,7 +68,8 @@ const hasTag = (tags, query) => tags?.map(tag => tag.toLowerCase()).includes(que
 /**
  * Get the options from an interaction.
  * @param {string[]} opts - An array of the names of the options requested.
- *   This can also include `guild`, which will return the guild ID.
+ *   This can also include `guild`, which will return the guild ID, and `uid`,
+ *   which will return the ID of the user who issued the command.
  * @param {object} interaction - The interaction object.
  * @returns {{}} - An object with keys for each option named in `opts`, with
  *   value set to the value of that option taken from the interaction.
@@ -78,11 +79,13 @@ const getOptions = (opts, interaction) => {
   const { options } = interaction
   const obj = {}
   for (const opt of opts) {
-    if (opt.toLowerCase() === 'guild') {
-      obj.guild = interaction.guildId
-    } else {
-      const raw = options.get(opt)
-      obj[opt] = raw?.value
+    switch (opt.toLowerCase()) {
+      case 'guild': obj.guild = interaction.guildId; break
+      case 'uid': obj.uid = interaction.user.id; break
+      default:
+        const raw = options.get(opt)
+        obj[opt] = raw?.value
+        break
     }
   }
   return obj
