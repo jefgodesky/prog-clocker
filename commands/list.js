@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { MessageEmbed } from 'discord.js'
-import { getOptions, filterClocks } from '../utils.js'
+import { getOptions, filterClocks, includesPrivateClocks } from '../utils.js'
 
 const data = new SlashCommandBuilder()
   .setName('list-clocks')
@@ -30,7 +30,8 @@ const execute = async function (state, interaction) {
     .setColor('#9f190b')
     .setTitle('Ticking Clocks')
     .setDescription(expr.join('\n'))
-  interaction.reply({ embeds: [embed] })
+  const ephemeral = includesPrivateClocks(clocks)
+  interaction.reply({ embeds: [embed], ephemeral })
 }
 
 const command = { data, execute }
