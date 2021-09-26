@@ -147,10 +147,9 @@ const getClocksEmbed = clocks => {
  */
 
 const getClockReply = (clocks) => {
-  const { embeds, files } = getClocksEmbed(clocks)
-  return includesPrivateClocks(clocks)
-    ? { embeds, files, ephemeral: true }
-    : { embeds, files }
+  const reply = getClocksEmbed(clocks)
+  if (includesPrivateClocks(clocks)) reply.ephemeral = true
+  return reply
 }
 
 /**
