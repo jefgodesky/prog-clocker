@@ -98,13 +98,15 @@ const getOptions = (opts, interaction) => {
 
 const getClockEmbed = clock => {
   const { max, curr, name, desc, tags } = clock
-  const file = `${curr}${max}.png`
+  const c = Math.min(curr, max)
+  const file = `${c}${max}.png`
   const thumb = new MessageAttachment(`./clocks/${file}`)
+  const color = c >= max ? '#ffd300' : '#9f190b'
   const embed = new MessageEmbed()
-    .setColor('#9f190b')
+    .setColor(color)
     .setTitle(name)
     .setThumbnail(`attachment://${file}`)
-    .addField('Progress', `${curr}/${max}`)
+    .addField('Progress', `${c}/${max}`)
   if (desc) embed.setDescription(desc)
   if (tags) embed.addField('Tags', tags.join(', '))
   return { embeds: [embed], files: [thumb] }
