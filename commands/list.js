@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { MessageEmbed } from 'discord.js'
-import { filterClocks } from '../utils.js'
+import { getOptions, filterClocks } from '../utils.js'
 
 const data = new SlashCommandBuilder()
   .setName('list-clocks')
@@ -14,11 +14,11 @@ const data = new SlashCommandBuilder()
     .addChoice('Any', 'OR'))
 
 const execute = async function (state, interaction) {
-  const { options } = interaction
+  const { guild, tags, logic } = getOptions(['guild', 'tags', 'logic'], interaction)
   const query = {
-    guild: interaction.guildId,
-    tags: options.getString('tags')?.split(/[,;]/).map(tag => tag.trim()),
-    logic: options.getString('logic') || 'OR',
+    guild,
+    tags: tags?.split(/[,;]/).map(tag => tag.trim()),
+    logic: logic || 'OR',
     uid: interaction.user.id
   }
   const clocks = filterClocks(query, state)

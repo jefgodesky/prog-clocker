@@ -81,7 +81,8 @@ const getOptions = (opts, interaction) => {
     if (opt.toLowerCase() === 'guild') {
       obj.guild = interaction.guildId
     } else {
-      obj[opt] = options.getString(opt)
+      const raw = options.get(opt)
+      obj[opt] = raw?.value
     }
   }
   return obj
