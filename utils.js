@@ -247,7 +247,7 @@ const findClocks = (query, state) => {
 
 /**
  * Return the clock with the given ID.
- * @param {string} id - The ID of the clock to find.
+ * @param {number} id - The ID of the clock to find.
  * @param {string} guild - The guild ID.
  * @param {string} uid - The ID of the user who issued the command.
  * @param {{}[]} state - An array of the clock objects to search through.
