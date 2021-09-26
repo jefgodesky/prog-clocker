@@ -134,6 +134,22 @@ const getClocksEmbed = clocks => {
 }
 
 /**
+ * Formulate a reply that shows embeds for one or more clocks.
+ * @param {{}|{}[]} clocks - Either an object representing a single clock, or
+ *   an array of such objects.
+ * @param {boolean} isPrivate - If `true`, the method will provide an ephemeral
+ *   reply.
+ * @returns {object} - A reply object with embeds for each of the clocks given.
+ */
+
+const getClockReply = (clocks, isPrivate) => {
+  const { embeds, files } = getClocksEmbed(clocks)
+  return isPrivate
+    ? { embeds, files, ephemeral: true }
+    : { embeds, files }
+}
+
+/**
  * Return only those clocks that were made for the specified guild.
  * @param {string} guild - The guild ID.
  * @param {{}[]} state - The current state.
@@ -206,8 +222,10 @@ export {
   load,
   loadJSON,
   hasTag,
+  getOptions,
   getClockEmbed,
   getClocksEmbed,
+  getClockReply,
   getGuildClocks,
   findClocks,
   filterClocks,
