@@ -145,7 +145,7 @@ const showClock = clock => {
 const showClocks = (name, state, params) => {
   const { guild, uid, offset = 0 } = params
   const visibleClocks = getVisibleGuildClocks(state, guild, uid)
-  const clocks = visibleClocks.filter(clock => clock.name === name)
+  const clocks = visibleClocks.filter(clock => clock.name.toLowerCase() === name.toLowerCase())
   if (clocks.length < 1) return { content: notFound(name), ephemeral: true }
   const more = clocks.length > 1
   const clock = more ? clocks[offset % clocks.length] : clocks[0]
